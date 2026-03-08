@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <title>{% block title %}My Site{% endblock %}</title>
+    <script src="{% static 'js/snowfall.js' %}"></script>
+</head>
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+</nav>
+<body>
+    
+    {% block content %}{% endblock %}
+</body>
+</html>

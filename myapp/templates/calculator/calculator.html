@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Webová kalkulačka v Pythonu{% endblock %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <span style="color: red;">{{error_msg}}</span>
+    <br>
+    <input type="text" name="a">
+    <select name="operator">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+    </select>
+    <input type="text" name="b"><br>
+    <input type="submit"><br>
+    <span style="color: whitesmoke;">{{result}}</span>
+</form>
+{% endblock %}
