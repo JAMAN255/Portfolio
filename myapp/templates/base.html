@@ -5,16 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/hacker.png' %}">
     <title>{% block title %}My Site{% endblock %}</title>
     <script src="{% static 'js/snowfall.js' %}"></script>
 </head>
-<nav>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/projects">Projects</a></li>
-        <li><a href="/contact">Contact</a></li>
-    </ul>
-</nav>
+<header>
+    <nav >
+        <ul>
+            <li><a href="/" id="nav-link">Home</a></li>
+            <li><a href="/projects" id="nav-link">Projects</a></li>
+            <li><a href="/contact" id="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+</header>
 <body>
     
     {% block content %}{% endblock %}

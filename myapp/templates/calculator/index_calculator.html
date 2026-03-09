@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Demographic Index Calculator{% endblock %}
+{% block content %}
+    <h1>Demographic Index Calculator</h1>
+    <p>Calculate ageing index, sauvy index and economic weight index.</p>
+    <a href="{% url 'calculator' %}">Go to basic calculator</a>
+
+    <form method="POST">
+    {% csrf_token %}
+    <span style="color: red;">{{error_msg}}</span>
+    <br>
+    
+    <input type="text" name="x">
+    <input type="text" name="y"><br><br>
+    <select style="align-items: center;" name="operator">
+        <option value="ageing">Ageing Index</option>
+        <option value="sauvy">Sauvy Index</option>
+        <option value="economic">Economic Weight Index</option>
+        <option value="dependency">Dependency Index</option>
+        <option value="shadow">Shadow Index</option>
+    </select>
+    
+    <input type="submit"><br>
+    <span style="color: whitesmoke;"><h3>Result: {{result}}</h3></span>
+</form>
+
+{% endblock %}
