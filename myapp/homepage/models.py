@@ -1,5 +1,6 @@
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+
 # Create your models here.
 class HomePage(models.Model):
     title = models.CharField(max_length=200)
@@ -7,42 +8,45 @@ class HomePage(models.Model):
 
     def __str__(self):
         return self.title
-class Manager(BaseUserManager):
-    def create_user(self, email, password=None):
-        print(self.model)
-        if email and password:
-            user = self.model(email=self.normalize_email(email))
-            user.set_password(password)
-            user.save()
-            return user
-    def create_supperuser(self, email, password):
-        user = self.create_user(email, password)
-        user.is_admin = True
-        user.save()
+class CustomUserManager(BaseUserManager):  # ← inherit from BaseUserManager, not UserManager
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
         return user
-    
-class User(AbstractBaseUser):
 
-    email = models.EmailField(max_length=300, unique=True)
-    is_admin = models.BooleanField(default=False)
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
 
-    class Meta:
-        verbose_name = "user"
-        verbose_name_plural = "users"
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
 
-    objects = Manager()
+        return self.create_user(email, password, **extra_fields)
 
-    USERNAME_FIELD = "email"
+
+class User(AbstractUser):
+    USER_TYPE_CHOICES = [
+        ('customer', 'Customer'),
+        ('staff', 'Staff'),
+        ('admin', 'Admin'),
+    ]
+    username = None
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=100, blank=True)
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='customer')
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
 
     def __str__(self):
-        return "email: {}".format(self.email)
+        return self.email
 
-    @property
-    def is_staff(self):
-        return self.is_admin
-
-    def has_perm(self, perm, obj=None):
-        return True
-
-    def has_module_perms(self, app_label):
-        return True
+    

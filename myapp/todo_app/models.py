@@ -6,9 +6,7 @@ sloupce této tabulky.
 """
 
 from django.db import models
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.conf import settings
 
 # Create your models here.
 
@@ -45,7 +43,7 @@ class TodoItem(models.Model):
     name = models.CharField(max_length=200, blank=False)
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="todo_items", null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="todo_items", null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="todo_items", null=True, blank=True)
     status = models.ForeignKey(TodoItemStatus, on_delete=models.CASCADE, related_name="todo_items", null=True, blank=True)
     priority = models.ForeignKey(Priority, on_delete=models.CASCADE, related_name="todo_items", null=True, blank=True)
     due_date = models.DateField(blank=True, null=True)
@@ -60,7 +58,7 @@ class TodoItem(models.Model):
         return self.name
 
 class UserTodo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_todos", null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_todos", null=True, blank=True)
     todo_item = models.ForeignKey(TodoItem, on_delete=models.CASCADE, related_name="user_todos", null=True, blank=True)
 
     class Meta:

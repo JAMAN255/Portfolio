@@ -19,7 +19,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from todo_app.views import TodoItemViewSet, CategoryViewSet, UserViewSet, TodoItemStatusViewSet, PriorityViewSet, UserTodoViewSet
-from insuranceapp.views import InsuranceViewSet
+from insuranceapp.views import InsuranceViewSet, InsCategoryViewSet as ICVS, PriceViewSet, UserViewSet as IUVS, InsuranceStatusViewSet 
 
 router = DefaultRouter()
 # Todo API endpoints
@@ -31,12 +31,16 @@ router.register(r"priority", PriorityViewSet)
 router.register(r"UserTodo", UserTodoViewSet)
 # Insurance API endpoints
 router.register(r"insurance", InsuranceViewSet)
+router.register(r"category", ICVS)
+router.register(r"price", PriceViewSet)
+router.register(r"user", IUVS)
+router.register(r"status", InsuranceStatusViewSet)
 
-# Homepage, calculator and admin urlpaths
+# Urlpaths
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('calculator/', include('calculator.urls')),
     path('', include('homepage.urls')),
     path('', include('todo_app.urls')),
-    path('api/', include(router.urls)),
+    path('', include('insuranceapp.urls'))
 ]

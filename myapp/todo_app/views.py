@@ -5,12 +5,12 @@ Zpracovávají data, která jsou získána z modelů nebo jiných zdrojů, a vra
 uživateli (např. HTML stránku nebo JSON).
 """
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
-from todo_app.forms import TodoItemForm
-from todo_app.models import TodoItem, Category, TodoItemStatus, Priority, UserTodo
+from .forms import TodoItemForm
+from .models import TodoItem, Category, TodoItemStatus, Priority, UserTodo
 from rest_framework import viewsets
 from .serializers import TodoItemSerializer, CategorySerializer, UserSerializer, TodoItemStatusSerializer, PrioritySerializer, UserTodoSerializer
 from django.contrib.auth import get_user_model
