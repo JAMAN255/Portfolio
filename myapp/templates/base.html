@@ -1,22 +1,53 @@
 {% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/hacker.png' %}">
+    
     <title>{% block title %}My Site{% endblock %}</title>
     <script src="{% static 'js/snowfall.js' %}"></script>
-</head>
-<nav>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/projects">Projects</a></li>
-        <li><a href="/contact">Contact</a></li>
-    </ul>
-</nav>
-<body>
     
+</head>
+<header>
+    <nav >
+        <ul>
+            <li><a href="/" id="nav-link">Home</a></li>
+            <li><a href="/projects" id="nav-link">Projects</a></li>
+            <li><a href="/contact" id="nav-link">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+<body>
+    <div class="content">
     {% block content %}{% endblock %}
+    </div>
 </body>
+<br>
+
+<footer >
+    
+    <div><ul class="end">
+        <H4>Contacts</H4>
+        <li>
+            <p>email: email@email.com</p>
+        </li>
+        
+        <li>
+            <p>tel: 123456789</p>
+        </li>
+        <li>
+            <p>band email: business@jakelovesspace.com</p>
+        </li>
+        <li>
+            <p><a href="https://jakelovesspace.com">jakelovesspace.com</a></p>
+        </li>
+    </ul>
+    </div>
+    
+</footer>
+<div class="cprg"><p id="text-footer">&copy; 2026 Jakub Man. All rights reserved.</p><br></div>
 </html>

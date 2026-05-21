@@ -1,0 +1,101 @@
+{% extends 'todo_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Task List{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>📝 All Tasks</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'todo_create' %}" class="btn btn-primary">+ Add New Task</a>
+    </div>
+</div>
+
+{% if todos %}
+    <div class="row">
+        {% for todo in todos %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card todo-item h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">{{ todo.name }}</h5>
+                            {% if todo.priority %}
+                                <span class="badge bg-warning text-dark">P{{ todo.priority.level }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if todo.description %}
+                            <p class="card-text text-muted small">{{ todo.description|truncatewords:15 }}</p>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            {% if todo.category %}
+                                <span class="badge bg-info">{{ todo.category.name }}</span>
+                            {% endif %}
+                            {% if todo.status %}
+                                <span class="badge badge-status {% if todo.status.name == 'Finished' %}bg-success{% elif todo.status.name == 'In Progress' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                    {{ todo.status.name }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="small text-muted mb-3">
+                            {% if todo.user %}
+                                <div><strong>Assigned:</strong> {{ todo.user.name }} {{ todo.user.surname }}</div>
+                            {% endif %}
+                            {% if todo.due_date %}
+                                <div><strong>Due:</strong> {{ todo.due_date|date:"M d, Y" }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'todo_detail' todo.pk %}" class="btn btn-sm btn-info">View</a>
+                            <a href="{% url 'todo_update' todo.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this task?')">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
+{% else %}
+    <div class="alert alert-info text-center" role="alert">
+        <h4>No tasks yet!</h4>
+        <p>Create your first task to get started.</p>
+        <a href="{% url 'todo_create' %}" class="btn btn-primary mt-2">Create Task</a>
+    </div>
+{% endif %}
+{% endblock %}

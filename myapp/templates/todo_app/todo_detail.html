@@ -1,0 +1,91 @@
+{% extends 'todo_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ todo.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">{{ todo.name }}</h3>
+                {% if todo.priority %}
+                    <span class="badge bg-warning text-dark" style="font-size: 1.2rem;">Priority {{ todo.priority.level }}</span>
+                {% endif %}
+            </div>
+            
+            <div class="card-body">
+                <!-- Status and Category -->
+                <div class="mb-4">
+                    {% if todo.status %}
+                        <span class="badge {% if todo.status.name == 'Finished' %}bg-success{% elif todo.status.name == 'In Progress' %}bg-warning text-dark{% else %}bg-secondary{% endif %} fs-6">
+                            {{ todo.status.name }}
+                        </span>
+                    {% endif %}
+                    {% if todo.category %}
+                        <span class="badge bg-info fs-6">{{ todo.category.name }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                {% if todo.description %}
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p class="card-text">{{ todo.description }}</p>
+                    </div>
+                {% endif %}
+
+                <!-- Details Grid -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Assigned User</h6>
+                        {% if todo.user %}
+                            <p>
+                                <strong>{{ todo.user.name }} {{ todo.user.surname }}</strong>
+                            </p>
+                        {% else %}
+                            <p class="text-muted">Not assigned</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Due Date</h6>
+                        {% if todo.due_date %}
+                            <p>
+                                <strong>{{ todo.due_date|date:"F d, Y" }}</strong>
+                                {% now "Y-m-d" as today %}
+                                {% if todo.due_date < today %}
+                                    <span class="badge bg-danger">Overdue</span>
+                                {% elif todo.due_date == today %}
+                                    <span class="badge bg-warning text-dark">Today</span>
+                                {% else %}
+                                    <span class="badge bg-info">Upcoming</span>
+                                {% endif %}
+                            </p>
+                        {% else %}
+                            <p class="text-muted">No due date</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Metadata -->
+                <div class="row text-muted small">
+                    <div class="col-md-6">
+                        <p><strong>Created:</strong> {{ todo.created_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Updated:</strong> {{ todo.updated_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="btn-group" role="group">
+                    <a href="{% url 'todo_update' todo.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-danger" onclick="return confirm('Delete this task?')">Delete</a>
+                    <a href="{% url 'todo_list' %}" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
