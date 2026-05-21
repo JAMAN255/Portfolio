@@ -1,0 +1,205 @@
+# GitLab CI/CD Pipeline Configuration for Django Statistical App
+# This pipeline runs tests and checks on every push
+
+stages:
+  - test
+  - coverage
+  - lint
+  - deploy
+
+variables:
+  POSTGRES_DB: test_db
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST_AUTH_METHOD: trust
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  # Setup Python environment
+  - python -V
+  - pip install --upgrade pip
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  # Install dependencies
+  - pip install -r requirements.txt
+  - pip install coverage pytest pytest-django flake8
+
+# Main test job
+test:django:
+  stage: test
+  image: python:3.10
+  services:
+    - postgres:13
+  variables:
+    DEBUG: "False"
+    DATABASE_URL: "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB"
+  script:
+    # Run database migrations
+    - cd myapp
+    - python manage.py migrate
+    - cd ..
+    # Run all tests with verbose output
+    - cd myapp
+    - python manage.py test --verbosity=2
+    - cd ..
+  artifacts:
+    reports:
+      junit: test_report.xml
+    expire_in: 30 days
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+
+# Test with SQLite (local testing)
+test:sqlite:
+  stage: test
+  image: python:3.10
+  script:
+    # Run tests with default SQLite database
+    - cd myapp
+    - python manage.py test --verbosity=2 todo_app
+    - python manage.py test --verbosity=2 calculator
+    - python manage.py test --verbosity=2 homepage
+    - python manage.py test --verbosity=2 insuranceapp
+    - cd ..
+  artifacts:
+    reports:
+      junit: test_report.xml
+    expire_in: 30 days
+  only:
+    - merge_requests
+    - push
+
+# Coverage analysis
+test:coverage:
+  stage: coverage
+  image: python:3.10
+  script:
+    # Install coverage tool
+    - pip install coverage
+    - cd myapp
+    # Run tests with coverage
+    - coverage run --source='.' manage.py test todo_app calculator homepage insuranceapp
+    # Generate coverage report
+    - coverage report
+    - coverage xml
+    - coverage html
+    - cd ..
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    paths:
+      - htmlcov/
+      - coverage.xml
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    expire_in: 30 days
+  allow_failure: true
+
+# Code quality checks
+test:lint:
+  stage: lint
+  image: python:3.10
+  script:
+    # Lint Python code
+    - flake8 myapp/todo_app --max-line-length=100 --exclude=migrations
+    - flake8 myapp/calculator --max-line-length=100 --exclude=migrations
+    - flake8 myapp/homepage --max-line-length=100 --exclude=migrations
+    - flake8 myapp/insuranceapp --max-line-length=100 --exclude=migrations
+  allow_failure: true
+  only:
+    - merge_requests
+    - push
+
+# Security checks
+test:bandit:
+  stage: lint
+  image: python:3.10
+  script:
+    - pip install bandit
+    - bandit -r myapp --exclude migrations -f json -o bandit-report.json || true
+    - cat bandit-report.json
+  artifacts:
+    paths:
+      - bandit-report.json
+    expire_in: 30 days
+  allow_failure: true
+
+# Django system checks
+test:checks:
+  stage: test
+  image: python:3.10
+  script:
+    - cd myapp
+    - python manage.py check
+    - cd ..
+
+# Test individual apps
+test:todo_app:
+  stage: test
+  image: python:3.10
+  script:
+    - cd myapp
+    - python manage.py test todo_app --verbosity=2
+    - cd ..
+
+test:calculator:
+  stage: test
+  image: python:3.10
+  script:
+    - cd myapp
+    - python manage.py test calculator --verbosity=2
+    - cd ..
+
+test:homepage:
+  stage: test
+  image: python:3.10
+  script:
+    - cd myapp
+    - python manage.py test homepage --verbosity=2
+    - cd ..
+
+test:insuranceapp:
+  stage: test
+  image: python:3.10
+  script:
+    - cd myapp
+    - python manage.py test insuranceapp --verbosity=2
+    - cd ..
+
+# Deployment stage (example - customize for your environment)
+deploy:staging:
+  stage: deploy
+  image: python:3.10
+  environment:
+    name: staging
+    url: https://staging.example.com
+  script:
+    - echo "Deploying to staging environment..."
+    # Add your deployment commands here
+  only:
+    - develop
+  when: manual
+
+deploy:production:
+  stage: deploy
+  image: python:3.10
+  environment:
+    name: production
+    url: https://example.com
+  script:
+    - echo "Deploying to production environment..."
+    # Add your deployment commands here
+  only:
+    - main
+    - master
+  when: manual
