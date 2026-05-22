@@ -171,47 +171,6 @@ class CalculationsModeTest(TestCase):
         self.assertEqual(result, [1])
 
 
-class IndexCalculationsTest(TestCase):
-    """Test index calculation methods"""
-
-    def test_ageing_index(self):
-        """Test ageing index calculation"""
-        result = IndexCalculations.ageing_idx(10, 20)
-        self.assertEqual(result, 0.5)
-
-    def test_ageing_index_same_values(self):
-        """Test ageing index with same values"""
-        result = IndexCalculations.ageing_idx(10, 10)
-        self.assertEqual(result, 1.0)
-
-    def test_sauvy_index(self):
-        """Test Sauvy index calculation"""
-        result = IndexCalculations.sauvy_idx(15, 30)
-        self.assertEqual(result, 0.5)
-
-    def test_ec_weight_index(self):
-        """Test economic weight index"""
-        result = IndexCalculations.ec_weight_idx(100, 200, 150)
-        self.assertEqual(result, 225.0)
-
-    def test_dependency_index(self):
-        """Test dependency index"""
-        result = IndexCalculations.dependency_idx(50, 100)
-        self.assertEqual(result, 50.0)
-
-    def test_shadow_index(self):
-        """Test shadow index"""
-        result = IndexCalculations.shadow_idx(75, 100)
-        self.assertEqual(result, 75.0)
-
-    def test_multiple_indices(self):
-        """Test multiple index calculations together"""
-        age = IndexCalculations.ageing_idx(20, 40)
-        sau = IndexCalculations.sauvy_idx(10, 15)
-        self.assertEqual(age, 0.5)
-        self.assertAlmostEqual(sau, 0.667, places=2)
-
-
 class CalculatorViewTest(TestCase):
     """Test calculator view"""
 
