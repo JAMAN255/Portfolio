@@ -43,5 +43,5 @@ urlpatterns = [
     path('calculator/', include('calculator.urls')),
     path('', include('homepage.urls')),
     path('', include('todo_app.urls')),
-    path('', include('insuranceapp.urls'))
+    path('insurance/', include('insuranceapp.urls'))
 ]

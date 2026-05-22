@@ -1,18 +1,19 @@
-"""
-Comprehensive tests for insuranceapp application.
-Tests insurance models, views, and forms.
-"""
-
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from decimal import Decimal
+
 from .models import (
-    InsCategory, Price, InsuranceStatus, Insurance, 
+    InsCategory, Price, InsuranceStatus, Insurance,
     CustomerProfile, StaffProfile
 )
 
 User = get_user_model()
+
+
+def create_staff_user(email='admin@example.com', password='pass12345'):
+    """Create a superuser that passes IsStaffUserMixin."""
+    return User.objects.create_superuser(email=email, password=password)
 
 
 class InsCategoryModelTest(TestCase):
@@ -33,7 +34,7 @@ class InsCategoryModelTest(TestCase):
         """Test creating multiple categories"""
         InsCategory.objects.create(name='Auto')
         InsCategory.objects.create(name='Home')
-        
+
         categories = InsCategory.objects.all()
         self.assertEqual(categories.count(), 3)
 
@@ -70,7 +71,7 @@ class PriceModelTest(TestCase):
         USD = Price.objects.create(amount=Decimal('100'), currency='USD')
         EUR = Price.objects.create(amount=Decimal('100'), currency='EUR')
         GBP = Price.objects.create(amount=Decimal('100'), currency='GBP')
-        
+
         self.assertEqual(USD.currency, 'USD')
         self.assertEqual(EUR.currency, 'EUR')
         self.assertEqual(GBP.currency, 'GBP')
@@ -115,7 +116,7 @@ class InsuranceModelTest(TestCase):
             currency='USD'
         )
         self.status = InsuranceStatus.objects.create(status='active')
-        
+
         self.insurance = Insurance.objects.create(
             name='Premium Health Insurance',
             description='Comprehensive health coverage',
@@ -144,18 +145,19 @@ class InsuranceModelTest(TestCase):
 
     def test_insurance_create_method(self):
         """Test create_insurance method"""
+        # Fix: model method's kwarg is `ins_category`, not `InsCategory`
         new_insurance = self.insurance.create_insurance(
             name='New Plan',
             description='New insurance plan',
             price=self.price,
-            category=self.category
+            ins_category=self.category
         )
         self.assertEqual(new_insurance.name, 'New Plan')
         self.assertIsNotNone(new_insurance.id)
 
     def test_multiple_insurances(self):
         """Test multiple insurance objects"""
-        insurance2 = Insurance.objects.create(
+        Insurance.objects.create(
             name='Auto Insurance',
             ins_category=self.category
         )
@@ -247,8 +249,12 @@ class InsuranceListViewTest(TestCase):
 
     def setUp(self):
         self.client = Client()
+        # IsStaffUserMixin requires staff or superuser
+        self.user = create_staff_user()
+        self.client.force_login(self.user)
+
         self.url = reverse('insurance_list')
-        
+
         category = InsCategory.objects.create(name='Health')
         for i in range(5):
             Insurance.objects.create(
@@ -281,7 +287,9 @@ class InsuranceDetailViewTest(TestCase):
     """Test InsuranceDetailView"""
 
     def setUp(self):
-        self.client = Client()
+        self.user = create_staff_user()
+        self.client.force_login(self.user)
+
         self.insurance = Insurance.objects.create(name='Test Insurance')
         self.url = reverse('insurance_detail', kwargs={'pk': self.insurance.pk})
 
@@ -305,7 +313,10 @@ class InsuranceCreateViewTest(TestCase):
     """Test InsuranceCreateView"""
 
     def setUp(self):
-        self.client = Client()
+        self.user = create_staff_user()
+        self.client.force_login(self.user)
+
+        # URL name from urls.py is 'insurance_form' for the create view
         self.url = reverse('insurance_form')
         self.category = InsCategory.objects.create(name='Auto')
 
@@ -324,7 +335,9 @@ class InsuranceCreateViewTest(TestCase):
         data = {
             'name': 'New Auto Insurance',
             'description': 'Complete auto coverage',
-            'ins_category': self.category.id
+            'ins_category': self.category.id,
+            'price': '',
+            'status': '',
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)
@@ -332,7 +345,13 @@ class InsuranceCreateViewTest(TestCase):
 
     def test_create_insurance_redirect(self):
         """Test create view redirects to insurance list"""
-        data = {'name': 'Test Plan'}
+        data = {
+            'name': 'Test Plan',
+            'description': '',
+            'ins_category': '',
+            'price': '',
+            'status': '',
+        }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, reverse('insurance_list'))
 
@@ -340,20 +359,16 @@ class InsuranceCreateViewTest(TestCase):
 class InsuranceUpdateViewTest(TestCase):
     """Test InsuranceUpdateView"""
 
-    
     def setUp(self):
         self.client = Client()
-        User = get_user_model()
-        self.user = User.objects.create_user(
-            email='tester@example.com',   
-            password='pass12345'
-        )
+        self.user = create_staff_user()
         self.client.force_login(self.user)
 
         self.insurance = Insurance.objects.create(
             name='Original Name',
             description='Original description'
         )
+        # URL name from urls.py for update view is 'insurance_update'
         self.url = reverse('insurance_update', kwargs={'pk': self.insurance.pk})
 
     def test_update_view_status_code(self):
@@ -365,7 +380,10 @@ class InsuranceUpdateViewTest(TestCase):
         """Test updating insurance via POST"""
         data = {
             'name': 'Updated Name',
-            'description': 'Updated description'
+            'description': 'Updated description',
+            'ins_category': '',
+            'price': '',
+            'status': '',
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)
@@ -374,7 +392,13 @@ class InsuranceUpdateViewTest(TestCase):
 
     def test_update_insurance_redirect(self):
         """Test update view redirects to insurance list"""
-        data = {'name': 'Updated Name'}
+        data = {
+            'name': 'Updated Name',
+            'description': '',
+            'ins_category': '',
+            'price': '',
+            'status': '',
+        }
         response = self.client.post(self.url, data)
         self.assertRedirects(response, reverse('insurance_list'))
 
@@ -383,8 +407,11 @@ class InsuranceDeleteViewTest(TestCase):
     """Test InsuranceDeleteView"""
 
     def setUp(self):
-        self.client = Client()
+        self.user = create_staff_user()
+        self.client.force_login(self.user)
+
         self.insurance = Insurance.objects.create(name='Delete Me')
+        # URL name from urls.py for delete view is 'insurance_delete'
         self.url = reverse('insurance_delete', kwargs={'pk': self.insurance.pk})
 
     def test_delete_view_status_code(self):
@@ -410,33 +437,44 @@ class InsuranceWorkflowTest(TestCase):
 
     def setUp(self):
         self.client = Client()
+        self.user = create_staff_user()
+        self.client.force_login(self.user)
+
         self.category = InsCategory.objects.create(name='Health')
 
     def test_complete_insurance_workflow(self):
         """Test creating, viewing, updating, and deleting insurance"""
-        # Create
-        create_url = reverse('insurance_create')
+        # Create — URL name is 'insurance_form'
+        create_url = reverse('insurance_form')
         create_data = {
             'name': 'Workflow Insurance',
             'description': 'Workflow test',
-            'ins_category': self.category.id
+            'ins_category': self.category.id,
+            'price': '',
+            'status': '',
         }
         response = self.client.post(create_url, create_data)
         self.assertEqual(response.status_code, 302)
-        
+
         # Retrieve
         insurance = Insurance.objects.get(name='Workflow Insurance')
         detail_url = reverse('insurance_detail', kwargs={'pk': insurance.pk})
         response = self.client.get(detail_url)
         self.assertEqual(response.status_code, 200)
-        
+
         # Update
         update_url = reverse('insurance_update', kwargs={'pk': insurance.pk})
-        update_data = {'name': 'Updated Workflow Insurance'}
+        update_data = {
+            'name': 'Updated Workflow Insurance',
+            'description': '',
+            'ins_category': '',
+            'price': '',
+            'status': '',
+        }
         response = self.client.post(update_url, update_data)
         self.assertEqual(response.status_code, 302)
-        
-        # Delete
+
+        # Delete — URL name is 'insurance_delete'
         delete_url = reverse('insurance_delete', kwargs={'pk': insurance.pk})
         response = self.client.post(delete_url)
         self.assertEqual(response.status_code, 302)

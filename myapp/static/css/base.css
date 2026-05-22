@@ -202,21 +202,37 @@ footer {
     margin-top: auto;
     background-color: #2c2c2c;
     width: 100%;
-    border-top: 1px solid rgba(255, 81, 0, 0.5);
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+}
+footer > div {
+    width: auto;
 }
 .end{
-    position: flex-end;
-    height: 110px;
+    width: auto;
     color: rgb(92, 92, 92);
     font-size: 0.7rem;
-    justify-content: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 20px;
+    padding-top: 10px;
+    margin: 0;
+}
+.end li {
+    text-align: left;
+}
+.end p {
+    margin: 0;
+    padding: 0;
 }
     .end h4{
         color:#929292;
-        justify-content: left;
-        align-self: left;
+        align-self: flex-start;
+        margin: 0 0 10px 0;
     }
     .end a{
         color: rgb(92, 92, 92);
@@ -232,7 +248,8 @@ footer {
 .cprg{
     background: rgb(29, 29, 29);
     width: 100%;
-    margin-top: auto;
+    margin-top: 0;
+    border-top: none;
 }
 /*site content*/
 

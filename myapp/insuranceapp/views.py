@@ -72,6 +72,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
 # ===== Insurance Management (Admin Only) =====
 class IsStaffUserMixin(UserPassesTestMixin):
+    login_url = 'insurance_login'
+    
     def test_func(self):
         return self.request.user.is_staff or self.request.user.is_superuser
 
@@ -118,12 +120,12 @@ class InsuranceDeleteView(IsStaffUserMixin, DeleteView):
     template_name = 'insurance_app/insurance_confirm_delete.html'
     success_url = reverse_lazy('insurance_list')
     
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         messages.success(self.request, 'Insurance deleted successfully!')
-        return super().delete(request, *args, **kwargs)
+        return super().form_valid(form)
 
 
-# ===== Insurance Application =====
+
 class AvailableInsurancesView(LoginRequiredMixin, ListView):
     model = Insurance
     template_name = 'insurance_app/available_insurances.html'
@@ -132,7 +134,7 @@ class AvailableInsurancesView(LoginRequiredMixin, ListView):
     paginate_by = 10
     
     def get_queryset(self):
-        # Show only active insurances
+        
         return Insurance.objects.filter(status__status='active').distinct()
     
     def get_context_data(self, **kwargs):
@@ -140,7 +142,7 @@ class AvailableInsurancesView(LoginRequiredMixin, ListView):
         try:
             customer_profile = self.request.user.customer_profile
             context['customer_profile'] = customer_profile
-            # Get already applied insurances
+            
             context['applied_insurances'] = CustomerInsurance.objects.filter(
                 customer=customer_profile
             ).values_list('insurance_id', flat=True)
@@ -171,7 +173,7 @@ class ApplyForInsuranceView(LoginRequiredMixin, FormView):
         try:
             customer_profile = self.request.user.customer_profile
             
-            # Check if already applied
+            
             if CustomerInsurance.objects.filter(
                 customer=customer_profile, 
                 insurance=self.insurance
@@ -179,7 +181,7 @@ class ApplyForInsuranceView(LoginRequiredMixin, FormView):
                 messages.warning(self.request, 'You have already applied for this insurance.')
                 return redirect('available_insurances')
             
-            # Create application
+            
             application = form.save(commit=False)
             application.customer = customer_profile
             application.insurance = self.insurance

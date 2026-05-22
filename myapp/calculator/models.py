@@ -37,32 +37,6 @@ class Calculations:
         return float(x) / float(y)
     
 
-class IndexCalculations:
-    def __init__(self, first_ec_gen, second_ec_gen, third_ec_gen, first_bg_gen, second_bg_gen, third_bg_gen):
-        self.first_ec_gen = float(first_ec_gen)
-        self.second_ec_gen = float(second_ec_gen)
-        self.third_ec_gen = float(third_ec_gen)
-        self.first_bg_gen = float(first_bg_gen)
-        self.second_bg_gen = float(second_bg_gen)
-        self.third_bg_gen = float(third_bg_gen)
-    
-    def ageing_idx(self):
-        age_idx = self.first_ec_gen / self.second_ec_gen
-        return age_idx
-    
-    def sauvy_idx(self):
-        sau_idx = self.first_bg_gen / self.second_bg_gen
-        return sau_idx
-    
-    def ec_weight_idx(self):
-        ecw_idx = ((self.first_ec_gen + self.second_ec_gen + self.third_ec_gen) / self.second_ec_gen) * 100
-        return ecw_idx
-    def dependency_idx(self):
-        di = (self.first_ec_gen / self.second_ec_gen) * 100
-        return di
-    
-    def shadow_idx(self):
-        sh_idx = (self.third_ec_gen / self.second_ec_gen) * 100
-        return sh_idx
+
 
 
