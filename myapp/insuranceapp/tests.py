@@ -101,7 +101,7 @@ class InsuranceStatusModelTest(TestCase):
     def test_invalid_status_choice(self):
         """Test invalid status choice is rejected"""
         with self.assertRaises(Exception):
-            status = InsuranceStatus.objects.create(status='pending')
+            self.status.full_clean() = InsuranceStatus.objects.create(status='pending')
 
 
 class InsuranceModelTest(TestCase):
@@ -145,7 +145,7 @@ class InsuranceModelTest(TestCase):
         """Test create_insurance method"""
         new_insurance = self.insurance.create_insurance(
             name='New Plan',
-            descrption='New insurance plan',
+            description='New insurance plan',
             price=self.price,
             category=self.category
         )
@@ -305,7 +305,7 @@ class InsuranceCreateViewTest(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.url = reverse('insurance_create')
+        self.url = reverse('insurance_form')
         self.category = InsCategory.objects.create(name='Auto')
 
     def test_create_view_status_code(self):
@@ -339,8 +339,16 @@ class InsuranceCreateViewTest(TestCase):
 class InsuranceUpdateViewTest(TestCase):
     """Test InsuranceUpdateView"""
 
+    
     def setUp(self):
         self.client = Client()
+        User = get_user_model()
+        self.user = User.objects.create_user(
+            email='tester@example.com',   
+            password='pass12345'
+        )
+        self.client.force_login(self.user)
+
         self.insurance = Insurance.objects.create(
             name='Original Name',
             description='Original description'
