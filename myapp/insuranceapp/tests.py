@@ -101,7 +101,8 @@ class InsuranceStatusModelTest(TestCase):
     def test_invalid_status_choice(self):
         """Test invalid status choice is rejected"""
         with self.assertRaises(Exception):
-            self.status.full_clean() = InsuranceStatus.objects.create(status='pending')
+            bad_status = InsuranceStatus(status="pending")
+            bad_status.full_clean()
 
 
 class InsuranceModelTest(TestCase):
