@@ -38,40 +38,31 @@ class Calculations:
     
 
 class IndexCalculations:
-    @staticmethod    
-    def ageing_idx(first_ec_gen, second_ec_gen):
-        age_idx =first_ec_gen / second_ec_gen
+    def __init__(self, first_ec_gen, second_ec_gen, third_ec_gen, first_bg_gen, second_bg_gen, third_bg_gen):
+        self.first_ec_gen = float(first_ec_gen)
+        self.second_ec_gen = float(second_ec_gen)
+        self.third_ec_gen = float(third_ec_gen)
+        self.first_bg_gen = float(first_bg_gen)
+        self.second_bg_gen = float(second_bg_gen)
+        self.third_bg_gen = float(third_bg_gen)
+    
+    def ageing_idx(self):
+        age_idx = self.first_ec_gen / self.second_ec_gen
         return age_idx
-    @staticmethod
-    def sauvy_idx(first_bg_gen, second_bg_gen):
-        sau_idx =first_bg_gen / second_bg_gen
+    
+    def sauvy_idx(self):
+        sau_idx = self.first_bg_gen / self.second_bg_gen
         return sau_idx
-    @staticmethod
-    def ec_weight_idx(first_ec_gen, second_ec_gen, third_ec_gen):
-        ecw_idx = ((first_ec_gen + second_ec_gen + third_ec_gen) / second_ec_gen)*100
+    
+    def ec_weight_idx(self):
+        ecw_idx = ((self.first_ec_gen + self.second_ec_gen + self.third_ec_gen) / self.second_ec_gen) * 100
         return ecw_idx
-    @staticmethod
-    def dependency_idx(first_ec_gen, second_ec_gen):
-        di = (first_ec_gen / second_ec_gen) * 100
+    def dependency_idx(self):
+        di = (self.first_ec_gen / self.second_ec_gen) * 100
         return di
     
-    @staticmethod
-    def shadow_idx(third_ec_gen, second_ec_gen):
-        sh_idx = (third_ec_gen /second_ec_gen) * 100
+    def shadow_idx(self):
+        sh_idx = (self.third_ec_gen / self.second_ec_gen) * 100
         return sh_idx
 
-#class ClusterCalculations:
-#    def __init__(self, data):
-#        self.data = data
-#
-#    def k_means(self, k):
-#        from sklearn.cluster import KMeans
-#        kmeans = KMeans(n_clusters=k)
-#        kmeans.fit(self.data)
-#        return kmeans.labels_, kmeans.cluster_centers_
-#    def hierarchical_clustering(self):
-#        from scipy.cluster.hierarchy import dendrogram, linkage
-#        linked = linkage(self.data, 'ward')
-#        return linked
-    
 

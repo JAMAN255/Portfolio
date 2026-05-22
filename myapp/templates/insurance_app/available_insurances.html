@@ -1,0 +1,118 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+{% block title %}Available Insurances{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Available Insurances</h1>
+        <p class="text-muted">Browse and apply for insurances</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'insurance_dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if insurances %}
+    <div class="row">
+        {% for insurance in insurances %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">{{ insurance.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ insurance.description|truncatewords:30 }}</p>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="text-muted">Category</label>
+                                <p>
+                                    {% if insurance.ins_category %}
+                                        <span class="badge bg-info">{{ insurance.ins_category.name }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">N/A</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted">Price</label>
+                                <p>
+                                    {% if insurance.price %}
+                                        <strong>{{ insurance.price.amount }} {{ insurance.price.currency }}</strong>
+                                    {% else %}
+                                        <span class="badge bg-secondary">N/A</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="text-muted">Status</label>
+                                <p>
+                                    {% if insurance.status %}
+                                        <span class="badge bg-success">{{ insurance.status.status|upper }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">N/A</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light">
+                        {% if insurance.id in applied_insurances %}
+                            <button class="btn btn-secondary w-100" disabled>✓ Already Applied</button>
+                        {% else %}
+                            <a href="{% url 'apply_insurance' insurance.id %}" class="btn btn-primary w-100">Apply Now</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info text-center">
+        <h4>No insurances available</h4>
+        <p>There are no active insurances available at this time. Please check back later.</p>
+    </div>
+{% endif %}
+
+{% endblock %}

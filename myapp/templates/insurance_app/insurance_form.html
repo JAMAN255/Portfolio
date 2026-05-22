@@ -3,7 +3,6 @@
 {% load crispy_forms_tags %}
 {% block title %}{% if form.instance.pk %}Update Insurance{% else %}Create Insurance{% endif %}{% endblock %}
 {% block content %}
-{%forms|crispy%}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
@@ -12,7 +11,7 @@
                     {% if form.instance.pk %}
                         ✏️ Update Insurance
                     {% else %}
-                        ➕ Create New Insurance
+                        Create New Insurance
                     {% endif %}
                 </h3>
             </div>

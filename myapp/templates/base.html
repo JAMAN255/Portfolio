@@ -12,42 +12,41 @@
     <script src="{% static 'js/snowfall.js' %}"></script>
     
 </head>
-<header>
-    <nav >
-        <ul>
-            <li><a href="/" id="nav-link">Home</a></li>
-            <li><a href="/projects" id="nav-link">Projects</a></li>
-            <li><a href="/contact" id="nav-link">About Me</a></li>
-        </ul>
-    </nav>
-</header>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/" id="nav-link">Home</a></li>
+                <li><a href="/projects" id="nav-link">Projects</a></li>
+                <li><a href="/contact" id="nav-link">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    
     <div class="content">
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
     </div>
+    
+    <footer>
+        <div><ul class="end">
+            <H4>Contacts</H4>
+            <li>
+                <p>email: email@email.com</p>
+            </li>
+            
+            <li>
+                <p>tel: 123456789</p>
+            </li>
+            <li>
+                <p>band email: business@jakelovesspace.com</p>
+            </li>
+            <li>
+                <p><a href="https://jakelovesspace.com">jakelovesspace.com</a></p>
+            </li>
+        </ul>
+        </div>
+    </footer>
+    
+    <div class="cprg"><p id="text-footer">&copy; 2026 Jakub Man. All rights reserved.</p><br></div>
 </body>
-<br>
-
-<footer >
-    
-    <div><ul class="end">
-        <H4>Contacts</H4>
-        <li>
-            <p>email: email@email.com</p>
-        </li>
-        
-        <li>
-            <p>tel: 123456789</p>
-        </li>
-        <li>
-            <p>band email: business@jakelovesspace.com</p>
-        </li>
-        <li>
-            <p><a href="https://jakelovesspace.com">jakelovesspace.com</a></p>
-        </li>
-    </ul>
-    </div>
-    
-</footer>
-<div class="cprg"><p id="text-footer">&copy; 2026 Jakub Man. All rights reserved.</p><br></div>
 </html>

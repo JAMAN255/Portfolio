@@ -85,19 +85,6 @@ class PriorityViewSet(viewsets.ModelViewSet):
 class UserTodoViewSet(viewsets.ModelViewSet):
     queryset = UserTodo.objects.all()
     serializer_class = UserTodoSerializer
-    serializer_class = TodoItemSerializer
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-class TodoItemStatusViewSet(viewsets.ModelViewSet):
-    queryset = TodoItemStatus.objects.all()
-    serializer_class = TodoItemStatusSerializer
 
 class PriorityViewSet(viewsets.ModelViewSet):
     queryset = Priority.objects.all()

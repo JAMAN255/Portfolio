@@ -48,12 +48,9 @@ class TodoItemSerializer(serializers.ModelSerializer):
         read_only_fields = ["created_at", "updated_at"]
 
 class UserTodoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TodoItem
-        fields = "__all__"
-    todos = TodoItemSerializer(many=True, read_only=True, source='UserTodo')
+    todos = TodoItemSerializer(many=True, read_only=True, source='user_todos')
 
     class Meta:
         model = User
-        fields = ["id", "name", "todos"]
+        fields = ["id", "email", "todos"]
 

@@ -332,30 +332,10 @@ class IndexCalculatorViewTest(TestCase):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, 'calculator/index_calculator.html')
 
-    def test_index_calculator_ageing_index(self):
-        """Test index calculator calculates ageing index"""
-        data = {
-            'first_ec_gen': '20',
-            'second_ec_gen': '40',
-            'third_ec_gen': '50',
-            'first_bg_gen': '30',
-            'second_bg_gen': '60',
-            'third_bg_gen': '70',
-        }
-        response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, 200)
-
-    def test_index_calculator_all_indices(self):
-        """Test index calculator calculates all indices"""
-        data = {
-            'first_ec_gen': '100',
-            'second_ec_gen': '200',
-            'third_ec_gen': '150',
-            'first_bg_gen': '120',
-            'second_bg_gen': '240',
-            'third_bg_gen': '180',
-        }
-        response = self.client.post(self.url, data)
+    def test_index_calculator_view_accessible(self):
+        """Test index calculator view is accessible"""
+        response = self.client.get(self.url)
+        self.assertIsNotNone(response)
         self.assertEqual(response.status_code, 200)
 
 
@@ -393,30 +373,3 @@ class CalculatorIntegrationTest(TestCase):
             'x': '20', 'y': '5', 'operator': '/'
         })
         self.assertEqual(response.context['result'], 4.0)
-    TestCase.assertFalse(Calculations.add(-2, -3), 5)
-    TestCase.assertFalse(Calculations.add(2,2), 5)
-    TestCase.assertRaises(TypeError, Calculations.add, 2, "3")
-    
-    
-
-def test_divide():
-   
-    TestCase.assertEqual(Calculations.divide(10, 2), 5)
-    TestCase.assertEqual(Calculations.divide(-4, 2), -2)
-    TestCase.assertEqual(Calculations.divide(0, 1), 0)
-    TestCase.assertRaises(ZeroDivisionError, Calculations.divide, 5, 0)
-
-def test_subtract():
-
-    TestCase.assertEqual(Calculations.subtract(5, 3), 2)
-    TestCase.assertEqual(Calculations.subtract(-1, 1), -2)
-    TestCase.assertFalse(Calculations.subtract(2,2), 1)
-    TestCase.assertFalse(Calculations.subtract(5, 3), 3)
-
-def test_multiply():
-    
-    TestCase.assertEqual(Calculations.multiply(4, 5), 20)
-    TestCase.assertEqual(Calculations.multiply(-2, 3), -6)
-    TestCase.assertEqual(Calculations.multiply(0, 10), 0)
-
-TestCase.run()

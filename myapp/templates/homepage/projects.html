@@ -1,25 +1,61 @@
 {% extends 'base.html' %}
-{%block title %}Projects{% endblock %}
+{% load static %}
+{% block title %}Projects{% endblock %}
 {% block content %}
+<section class="content">
     <h1>Projects</h1>
-    <section class="prjct">
-        <div class="prjct-list-a">
-            <ul >
-                <br>
-                <li><a href="/calculator/">Web calculator in Python</a></li><br>
-                <li><a href="/calculator/index_calculator/">Demographic Index Calculator</a></li><br>
-                <li><a href="/insurance/">Insurance App using Django REST Api</a></li><br>
-                <li><a href="https://gitlab.com/JAMAN255/console_insurance.git">Console insurance app in Python</a></li><br>
-                <li><a href="/todos">Todo app</a></li><br>
-            </ul>
-            
-        </div>  
-
-        <div class="prjct-list">
-            <ul>
-                <li>Band</li>
-                <li>School</li>
-            </ul>
+    <p id="text" style="margin-bottom: 30px;">Here are some of my recent projects. Click on any card to explore.</p>
+    
+    <div class="projects-container">
+        <!-- Web Calculator Project -->
+        <div class="project-card">
+            <img src="{% static 'images/calculator.png' %}" alt="Web Calculator" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Web Calculator</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Simple calculator built with Python Django</p>
+                <a href="/calculator/" class="project-card-link">View Project →</a>
+            </div>
         </div>
-    </section>
+
+        <!-- Demographic Index Calculator -->
+        <div class="project-card">
+            <img src="{% static 'images/demographics.png' %}" alt="Demographic Calculator" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Demographic Calculator</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Advanced demographic index calculations</p>
+                <a href="/calculator/index_calculator/" class="project-card-link">View Project →</a>
+            </div>
+        </div>
+
+        <!-- Insurance App Project -->
+        <div class="project-card">
+            <img src="{% static 'images/insurance.png' %}" alt="Insurance App" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Insurance App</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Full-featured insurance management with Django REST API</p>
+                <a href="/insurance/login/" class="project-card-link">View Project →</a>
+            </div>
+        </div>
+
+        <!-- Console Insurance App Project -->
+        <div class="project-card">
+            <img src="{% static 'images/console.png' %}" alt="Console Insurance" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Console Insurance App</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Command-line insurance application in Python</p>
+                <a href="https://gitlab.com/JAMAN255/console_insurance.git" target="_blank" class="project-card-link">View on GitLab →</a>
+            </div>
+        </div>
+
+        <!-- Todo App Project -->
+        <div class="project-card">
+            <img src="{% static 'images/todo.png' %}" alt="Todo App" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Todo App</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Task management application with Django</p>
+                <a href="/todos" class="project-card-link">View Project →</a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

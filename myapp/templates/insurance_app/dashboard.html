@@ -1,0 +1,142 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>My Dashboard</h1>
+        <p class="text-muted">Welcome, {{ user.first_name }}!</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'available_insurances' %}" class="btn btn-primary">+ Apply for Insurance</a>
+        <a href="{% url 'insurance_logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% else %}
+    <!-- User Profile Summary -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> {{ customer_profile.name }}</p>
+                            <p><strong>Email:</strong> {{ customer_profile.email }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>User Type:</strong> <span class="badge bg-primary">{{ customer_profile.user_type }}</span></p>
+                            <p><strong>Policy Number:</strong> {{ customer_profile.policy_number|default:"Not set" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Insurances -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Active Insurances</h5>
+                </div>
+                {% if approved_insurances %}
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Insurance Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Approved Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in approved_insurances %}
+                                    <tr>
+                                        <td><strong>{{ app.insurance.name }}</strong></td>
+                                        <td>{{ app.insurance.ins_category.name|default:"N/A" }}</td>
+                                        <td>
+                                            {% if app.insurance.price %}
+                                                {{ app.insurance.price.amount }} {{ app.insurance.price.currency }}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td><span class="badge bg-success">{{ app.status|upper }}</span></td>
+                                        <td>{{ app.approved_at|date:"Y-m-d H:i" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="card-body">
+                        <p class="text-muted mb-0">You don't have any active insurances yet. <a href="{% url 'available_insurances' %}">Apply now</a></p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Insurance Applications -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Application History</h5>
+                </div>
+                {% if applications %}
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Insurance Name</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Applied On</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                    <tr>
+                                        <td><strong>{{ app.insurance.name }}</strong></td>
+                                        <td>{{ app.insurance.ins_category.name|default:"N/A" }}</td>
+                                        <td>
+                                            {% if app.status == 'pending' %}
+                                                <span class="badge bg-warning">PENDING</span>
+                                            {% elif app.status == 'approved' %}
+                                                <span class="badge bg-success">APPROVED</span>
+                                            {% elif app.status == 'active' %}
+                                                <span class="badge bg-success">ACTIVE</span>
+                                            {% elif app.status == 'rejected' %}
+                                                <span class="badge bg-danger">REJECTED</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ app.applied_at|date:"Y-m-d H:i" }}</td>
+                                        <td>{{ app.notes|truncatewords:5|default:"—" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="card-body">
+                        <p class="text-muted mb-0">No applications yet. <a href="{% url 'available_insurances' %}">Browse available insurances</a></p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
