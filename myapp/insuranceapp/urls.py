@@ -18,5 +18,5 @@ urlpatterns = [
     path('<int:pk>/', views.InsuranceDetailView.as_view(), name='insurance_detail'),
     path('create/', views.InsuranceCreateView.as_view(), name='insurance_form'),
     path('<int:pk>/update/', views.InsuranceUpdateView.as_view(), name='insurance_update'),  
-    path('<int:pk>/delete/', views.InsuranceDeleteView.as_view(), name='insurance_confirm_delete'),
+    path('<int:pk>/delete/', views.InsuranceDeleteView.as_view(), name='insurance_delete'),
 ]

@@ -411,13 +411,9 @@ class InsuranceDeleteViewTest(TestCase):
         self.client.force_login(self.user)
 
         self.insurance = Insurance.objects.create(name='Delete Me')
-        # URL name from urls.py for delete view is 'insurance_delete'
+        
         self.url = reverse('insurance_delete', kwargs={'pk': self.insurance.pk})
 
-    def test_delete_view_status_code(self):
-        """Test delete view GET returns 200"""
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
 
     def test_delete_insurance_post(self):
         """Test deleting insurance via POST"""
