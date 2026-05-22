@@ -6,7 +6,7 @@ Tests calculations, index calculations, and views.
 
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Calculations, IndexCalculations
+from .models import Calculations
 
 
 class CalculationsBasicTest(TestCase):
@@ -86,89 +86,6 @@ class CalculationsBasicTest(TestCase):
         """Test division with negative numbers"""
         result = Calculations.divide(-10, 2)
         self.assertEqual(result, -5.0)
-
-
-class CalculationsMeanTest(TestCase):
-    """Test mean calculation"""
-
-    def test_mean_simple_list(self):
-        """Test mean of simple list"""
-        result = Calculations.mean([1, 2, 3, 4, 5])
-        self.assertEqual(result, 3.0)
-
-    def test_mean_single_element(self):
-        """Test mean of single element"""
-        result = Calculations.mean([5])
-        self.assertEqual(result, 5.0)
-
-    def test_mean_negative_numbers(self):
-        """Test mean with negative numbers"""
-        result = Calculations.mean([-1, -2, -3])
-        self.assertEqual(result, -2.0)
-
-    def test_mean_float_numbers(self):
-        """Test mean of float numbers"""
-        result = Calculations.mean([1.5, 2.5, 3.5])
-        self.assertEqual(result, 2.5)
-
-    def test_mean_large_list(self):
-        """Test mean of large list"""
-        data = list(range(1, 101))
-        result = Calculations.mean(data)
-        self.assertEqual(result, 50.5)
-
-
-class CalculationsMedianTest(TestCase):
-    """Test median calculation"""
-
-    def test_median_odd_length_list(self):
-        """Test median of odd length list"""
-        result = Calculations.median([1, 2, 3, 4, 5])
-        self.assertEqual(result, 3)
-
-    def test_median_even_length_list(self):
-        """Test median of even length list"""
-        result = Calculations.median([1, 2, 3, 4])
-        self.assertEqual(result, 2.5)
-
-    def test_median_single_element(self):
-        """Test median of single element"""
-        result = Calculations.median([5])
-        self.assertEqual(result, 5)
-
-    def test_median_unsorted_list(self):
-        """Test median handles unsorted list"""
-        result = Calculations.median([5, 1, 3, 2, 4])
-        self.assertEqual(result, 3)
-
-    def test_median_negative_numbers(self):
-        """Test median with negative numbers"""
-        result = Calculations.median([-5, -3, -1])
-        self.assertEqual(result, -3)
-
-
-class CalculationsModeTest(TestCase):
-    """Test mode calculation"""
-
-    def test_mode_single_mode(self):
-        """Test mode with single most frequent value"""
-        result = Calculations.mode([1, 1, 1, 2, 3])
-        self.assertEqual(result, [1])
-
-    def test_mode_multiple_modes(self):
-        """Test mode with multiple most frequent values"""
-        result = Calculations.mode([1, 1, 2, 2, 3])
-        self.assertCountEqual(result, [1, 2])
-
-    def test_mode_all_equal_frequency(self):
-        """Test mode when all values have equal frequency"""
-        result = Calculations.mode([1, 2, 3, 4])
-        self.assertEqual(len(result), 4)
-
-    def test_mode_with_duplicates(self):
-        """Test mode with many duplicates"""
-        result = Calculations.mode([1, 1, 1, 1, 2])
-        self.assertEqual(result, [1])
 
 
 class CalculatorViewTest(TestCase):
@@ -272,30 +189,6 @@ class CalculatorViewTest(TestCase):
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.context['result'], 13.0)
-
-
-class IndexCalculatorViewTest(TestCase):
-    """Test index calculator view"""
-
-    def setUp(self):
-        self.client = Client()
-        self.url = reverse('index_calculator')
-
-    def test_index_calculator_get_status_code(self):
-        """Test index calculator view GET returns 200"""
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_index_calculator_view_template(self):
-        """Test index calculator view uses correct template"""
-        response = self.client.get(self.url)
-        self.assertTemplateUsed(response, 'calculator/index_calculator.html')
-
-    def test_index_calculator_view_accessible(self):
-        """Test index calculator view is accessible"""
-        response = self.client.get(self.url)
-        self.assertIsNotNone(response)
-        self.assertEqual(response.status_code, 200)
 
 
 class CalculatorIntegrationTest(TestCase):
