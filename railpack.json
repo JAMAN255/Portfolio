@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.railway.app/railpack.schema.json",
   "deploy": {
-    "startCommand": "gunicorn myapp.wsgi:application",
+    "startCommand": "cd myapp && py manage.py runserver",
     "restartPolicyMaxRetries": 5,
     "restartPolicyWindow": 600
   },
