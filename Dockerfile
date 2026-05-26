@@ -14,14 +14,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
-# Create static files directory
-RUN mkdir -p myapp/static myapp/media
+# Create static files and media directories
+RUN mkdir -p myapp/static myapp/media myapp/staticfiles
 
-# Collect static files
-RUN python myapp/manage.py collectstatic --noinput || true
+# Navigate to myapp and collect static files
+WORKDIR /app/myapp
+RUN python manage.py collectstatic --noinput || true
 
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "myapp.wsgi:application"]
+# Run migrations and start gunicorn
+CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn --bind 0.0.0.0:8000 --workers 4 --timeout 120 myapp.wsgi:application"]
