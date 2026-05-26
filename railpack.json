@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.railway.app/railpack.schema.json",
   "deploy": {
-    "startCommand": "cd myapp && py manage.py runserver",
+    "startCommand": "cd myapp && python manage.py migrate && gunicorn -b 0.0.0.0:8000 myapp.wsgi:application",
     "restartPolicyMaxRetries": 5,
     "restartPolicyWindow": 600
   },
@@ -45,19 +45,19 @@
   },
   "processes": {
     "web": {
-      "cmd": "gunicorn myapp.wsgi:application",
+      "cmd": "cd myapp && gunicorn -b 0.0.0.0:8000 myapp.wsgi:application",
       "numReplicas": 1,
       "cpuRequest": "100m",
       "memoryRequest": "512Mi"
     },
     "worker": {
-      "cmd": "celery -A myapp worker -l info",
+      "cmd": "cd myapp && celery -A myapp worker -l info",
       "numReplicas": 0,
       "cpuRequest": "100m",
       "memoryRequest": "512Mi"
     },
     "beat": {
-      "cmd": "celery -A myapp beat -l info",
+      "cmd": "cd myapp && celery -A myapp beat -l info",
       "numReplicas": 0,
       "cpuRequest": "100m",
       "memoryRequest": "256Mi"
