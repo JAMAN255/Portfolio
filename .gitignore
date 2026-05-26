@@ -132,3 +132,5 @@ token.txt
 *.pem
 *.key
 secrets.json
+
+statistical-app/
