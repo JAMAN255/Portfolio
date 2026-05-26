@@ -1,0 +1,26 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Create User Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Create New User Profile</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Create User Profile</button>
+                        <a href="{% url 'insurance_list' %}" class="btn btn-secondary btn-lg ms-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

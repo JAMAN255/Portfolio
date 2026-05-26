@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from . import models
+from .models import Calculations
 # Create your views here.
 
 def calculator(request):
@@ -7,18 +7,18 @@ def calculator(request):
     result = None
     if request.method == 'POST':
         try:
-            float(request.POST["a"])
-            float(request.POST["b"])
+            float(request.POST.get("x"))
+            float(request.POST.get("y"))
 
-            if request.POST["operator"] == '+':
-                result = models.add(float(request.POST["a"]), float(request.POST["b"]))
-            elif request.POST["operator"] == '-':
-                result = models.subtract(float(request.POST["a"]), float(request.POST["b"]))
-            elif request.POST["operator"] == '*':
-                result = models.multiply(float(request.POST["a"]), float(request.POST["b"]))
-            elif request.POST["operator"] == '/':
-                if float(request.POST["b"]) != 0:
-                    result = models.divide(float(request.POST["a"]), float(request.POST["b"]))
+            if request.POST.get("operator") == '+':
+                result = Calculations.add(float(request.POST.get("x")), float(request.POST.get("y")))
+            elif request.POST.get("operator") == '-':
+                result = Calculations.subtract(float(request.POST.get("x")), float(request.POST.get("y")))
+            elif request.POST.get("operator") == '*':
+                result = Calculations.multiply(float(request.POST.get("x")), float(request.POST.get("y")))
+            elif request.POST.get("operator") == '/':
+                if float(request.POST.get("y")) != 0:
+                    result = Calculations.divide(float(request.POST.get("x")), float(request.POST.get("y")))
                 else:
                     error_msg = "Cannot divide by zero."
             else:

@@ -1,10 +1,61 @@
 {% extends 'base.html' %}
-{%block title %}Projects{% endblock %}
+{% load static %}
+{% block title %}Projects{% endblock %}
 {% block content %}
+<section class="content">
     <h1>Projects</h1>
-    <ul id="projects">
-        <li><a href="../calculator/projects/calculator">Web calculator in Python</a></li>
-        <li><a href="projects/statistics/">Statistical app in Python</a></li>
-        <li><a href="projects/insurance/">Console insurance app in Python</a></li>
-    </ul>
+    <p id="text" style="margin-bottom: 30px;">Here are some of my recent projects. Click on any card to explore.</p>
+    
+    <div class="projects-container">
+        <!-- Web Calculator Project -->
+        <div class="project-card">
+            <img src="{% static 'images/calculator.png' %}" alt="Web Calculator" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Web Calculator</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Simple calculator built with Python Django</p>
+                <a href="/calculator/" class="project-card-link">View Project →</a>
+            </div>
+        </div>
+
+        <!-- Insurance App Project -->
+        <div class="project-card">
+            <img src="{% static 'images/insurance.png' %}" alt="Insurance App" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Insurance App</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Full-featured insurance management with Django REST API</p>
+                <a href="/insurance/login/" class="project-card-link">View Project →</a>
+            </div>
+        </div>
+
+        <!-- Console Insurance App Project -->
+        <div class="project-card">
+            <img src="{% static 'images/console.png' %}" alt="Console Insurance" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Console Insurance App</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Command-line insurance application in Python</p>
+                <a href="https://gitlab.com/JAMAN255/console_insurance.git" target="_blank" class="project-card-link">View on GitLab →</a>
+            </div>
+        </div>
+
+        <!-- Todo App Project -->
+        <div class="project-card">
+            <img src="{% static 'images/todo.png' %}" alt="Todo App" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Todo App</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Task management application with Django</p>
+                <a href="/todos" class="project-card-link">View Project →</a>
+            </div>
+        </div>
+
+        <!-- Ossan Triangle visualization -->
+        <div class="project-card">
+            <img src="{% static 'images/ossan.png' %}" alt="Ossan Triangle" class="project-card-image" onerror="this.style.display='none'">
+            <div class="project-card-content">
+                <h3 class="project-card-title">Ossan Triangle Visualization</h3>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Python code for visualizing ternary graphs</p>
+                <a href="https://gitlab.com/JAMAN255/ossan-triangle-code" target="_blank" class="project-card-link">View on GitLab →</a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

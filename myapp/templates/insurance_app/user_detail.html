@@ -1,0 +1,57 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}User Profile Detail{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>User Profile</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'insurance_list' %}" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">{{ user.name }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>First Name:</strong></label>
+                        <p class="text-muted">{{ user.first_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Last Name:</strong></label>
+                        <p class="text-muted">{{ user.last_name }}</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Email:</strong></label>
+                        <p class="text-muted">{{ user.email }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>User Type:</strong></label>
+                        <p class="text-muted">{{ user.user_type }}</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Policy Number:</strong></label>
+                        <p class="text-muted">{{ user.policy_number }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Date of Birth:</strong></label>
+                        <p class="text-muted">{{ user.date_of_birth }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

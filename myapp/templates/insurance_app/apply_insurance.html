@@ -1,0 +1,113 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Apply for Insurance{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Apply for Insurance</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'available_insurances' %}" class="btn btn-secondary">← Back</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Insurance Details -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Insurance Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label"><strong>Insurance Name</strong></label>
+                        <p class="form-control-plaintext">{{ insurance.name }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Category</strong></label>
+                        <p class="form-control-plaintext">
+                            {% if insurance.ins_category %}
+                                {{ insurance.ins_category.name }}
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Price</strong></label>
+                        <p class="form-control-plaintext">
+                            {% if insurance.price %}
+                                {{ insurance.price.amount }} {{ insurance.price.currency }}
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label"><strong>Description</strong></label>
+                        <p class="form-control-plaintext">{{ insurance.description }}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Status</strong></label>
+                        <p class="form-control-plaintext">
+                            {% if insurance.status %}
+                                <span class="badge bg-success">{{ insurance.status.status|upper }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">N/A</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Application Form</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Submit Application</button>
+                        <a href="{% url 'available_insurances' %}" class="btn btn-secondary btn-lg ms-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Info Sidebar -->
+    <div class="col-md-4">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">What happens next?</h5>
+                <ol class="small">
+                    <li>You submit your application</li>
+                    <li>Our admins review your request</li>
+                    <li>You'll receive approval/rejection</li>
+                    <li>Active insurances appear on your dashboard</li>
+                </ol>
+                <hr>
+                <p class="small text-muted"><strong>Note:</strong> Applications typically take 1-3 business days to process.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

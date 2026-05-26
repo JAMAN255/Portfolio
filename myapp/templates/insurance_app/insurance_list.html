@@ -1,0 +1,56 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Insurance List{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Insurance List</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'insurance_form' %}" class="btn btn-primary">+ Add New Insurance</a>
+    </div>
+</div>
+
+{% if insurance %}
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in insurance %}
+                        <tr>
+                            <td><strong>{{ item.name }}</strong></td>
+                            <td>{{ item.description|truncatewords:10 }}</td>
+                            <td>{% if item.ins_category %}{{ item.ins_category.name }}{% else %}<span class="badge bg-secondary">N/A</span>{% endif %}</td>
+                            <td>{% if item.price %}{{ item.price.amount }} {{ item.price.currency }}{% else %}<span class="badge bg-secondary">N/A</span>{% endif %}</td>
+                            <td>{% if item.status %}<span class="badge bg-info">{{ item.status.status }}</span>{% else %}<span class="badge bg-secondary">N/A</span>{% endif %}</td>
+                            <td>
+                                <a href="{% url 'insurance-detail' item.pk %}" class="btn btn-sm btn-info">View</a>
+                                <a href="{% url 'insurance_update' item.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'insurance_delete' item.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-info text-center" role="alert">
+        <h4>No Insurances yet!</h4>
+        <p>Create your first Insurance to get started.</p>
+        <a href="{% url 'insurance_form' %}" class="btn btn-primary mt-2">Create Insurance</a>
+    </div>
+{% endif %}
+{% endblock %}

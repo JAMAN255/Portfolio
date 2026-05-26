@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %}Webová kalkulačka v Pythonu{% endblock %}
+{% block title %}Web calculator in Python{% endblock %}
 
 {% block content %}
+<h1> Basic Calculator</h1>
 <form method="POST">
     {% csrf_token %}
     <span style="color: red;">{{error_msg}}</span>
     <br>
-    <input type="text" name="a">
+    <input type="text" name="x">
     <select name="operator">
         <option value="+">+</option>
         <option value="-">-</option>
         <option value="*">*</option>
         <option value="/">/</option>
     </select>
-    <input type="text" name="b"><br>
+    <input type="text" name="y"><br>
     <input type="submit"><br>
-    <span style="color: whitesmoke;">{{result}}</span>
+    <span style="color: whitesmoke;"><h3>Result: {{result}}</h3></span>
 </form>
 {% endblock %}
