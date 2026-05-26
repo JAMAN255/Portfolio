@@ -1,0 +1,81 @@
+{
+  "$schema": "https://assets.railway.app/railpack.schema.json",
+  "deploy": {
+    "startCommand": "gunicorn myapp.wsgi:application",
+    "restartPolicyMaxRetries": 5,
+    "restartPolicyWindow": 600
+  },
+  "build": {
+    "builder": "dockerfile"
+  },
+  "buildpacks": [
+    {
+      "id": "heroku/python"
+    }
+  ],
+  "env": {
+    "PYTHONUNBUFFERED": {
+      "description": "Python output buffering",
+      "value": "1"
+    },
+    "DEBUG": {
+      "description": "Django debug mode",
+      "value": "False"
+    },
+    "ALLOWED_HOSTS": {
+      "description": "Comma-separated list of allowed hosts",
+      "value": "*"
+    },
+    "DATABASE_URL": {
+      "description": "PostgreSQL connection string",
+      "value": ""
+    },
+    "REDIS_URL": {
+      "description": "Redis connection string for Celery",
+      "value": ""
+    },
+    "SECRET_KEY": {
+      "description": "Django secret key for production",
+      "value": ""
+    }
+  },
+  "volumes": {
+    "static": "/app/myapp/static",
+    "media": "/app/myapp/media"
+  },
+  "processes": {
+    "web": {
+      "cmd": "gunicorn myapp.wsgi:application",
+      "numReplicas": 1,
+      "cpuRequest": "100m",
+      "memoryRequest": "512Mi"
+    },
+    "worker": {
+      "cmd": "celery -A myapp worker -l info",
+      "numReplicas": 0,
+      "cpuRequest": "100m",
+      "memoryRequest": "512Mi"
+    },
+    "beat": {
+      "cmd": "celery -A myapp beat -l info",
+      "numReplicas": 0,
+      "cpuRequest": "100m",
+      "memoryRequest": "256Mi"
+    }
+  },
+  "healthcheck": {
+    "path": "/",
+    "initialDelaySeconds": 30,
+    "periodSeconds": 30,
+    "timeoutSeconds": 5,
+    "failureThreshold": 3
+  },
+  "postgres": {
+    "enabled": true,
+    "version": "15"
+  },
+  "redis": {
+    "enabled": true,
+    "version": "7"
+  }
+}
