@@ -11,8 +11,22 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import dj_database_url
-from decouple import config
+
+try:
+    import dj_database_url
+except ImportError:
+    dj_database_url = None
+
+try:
+    from decouple import config
+except ImportError:
+    # Fallback if decouple is not installed
+    import os
+    def config(key, default=None, cast=None):
+        value = os.environ.get(key, default)
+        if cast:
+            return cast(value)
+        return value
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,19 +100,27 @@ WSGI_APPLICATION = 'myapp.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 # Use PostgreSQL in production, SQLite in development
 if config('DATABASE_URL', default=''):
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL'),
-            conn_max_age=600
-        )
-    }
+    if dj_database_url:
+        DATABASES = {
+            'default': dj_database_url.config(
+                default=config('DATABASE_URL'),
+                conn_max_age=600
+            )
+        }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
-        }
+    }
 
 
 
