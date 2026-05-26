@@ -1,18 +1,13 @@
 {
   "$schema": "https://assets.railway.app/railpack.schema.json",
   "deploy": {
-    "startCommand": "gunicorn -b 0.0.0.0:8000 myapp.wsgi:application",
+    "startCommand": "cd myapp && python manage.py migrate --noinput && gunicorn --bind 0.0.0.0:8000 --workers 4 --timeout 120 myapp.wsgi:application",
     "restartPolicyMaxRetries": 5,
     "restartPolicyWindow": 600
   },
   "build": {
     "builder": "dockerfile"
   },
-  "buildpacks": [
-    {
-      "id": "heroku/python"
-    }
-  ],
   "env": {
     "PYTHONUNBUFFERED": {
       "description": "Python output buffering",
@@ -39,13 +34,9 @@
       "value": ""
     }
   },
-  "volumes": {
-    "static": "/app/myapp/static",
-    "media": "/app/myapp/media"
-  },
   "processes": {
     "web": {
-      "cmd": "cd myapp && gunicorn -b 0.0.0.0:8000 myapp.wsgi:application",
+      "cmd": "cd myapp && gunicorn --bind 0.0.0.0:8000 --workers 4 --timeout 120 myapp.wsgi:application",
       "numReplicas": 1,
       "cpuRequest": "100m",
       "memoryRequest": "512Mi"
