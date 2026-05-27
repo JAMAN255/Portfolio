@@ -1,7 +1,62 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block title %}Projects{% endblock %}
 {% block content %}
+<style>
+    .projects-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    .project-card {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+    }
+    .project-card-header {
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 48px;
+        min-height: 200px;
+    }
+    .project-card-content {
+        padding: 20px;
+        background: white;
+    }
+    .project-card-title {
+        margin: 10px 0;
+        font-size: 18px;
+        color: #333;
+    }
+    .project-card-desc {
+        font-size: 14px;
+        color: #666;
+        margin: 10px 0;
+    }
+    .project-card-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+    .project-card-link:hover {
+        background: #5568d3;
+    }
+</style>
+
 <section class="content">
     <h1>Projects</h1>
     <p id="text" style="margin-bottom: 30px;">Here are some of my recent projects. Click on any card to explore.</p>
@@ -9,50 +64,50 @@
     <div class="projects-container">
         <!-- Web Calculator Project -->
         <div class="project-card">
-            <div class="project-card-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">📱 Calculator</div>
+            <div class="project-card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📱</div>
             <div class="project-card-content">
                 <h3 class="project-card-title">Web Calculator</h3>
-                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Simple calculator built with Python Django</p>
+                <p class="project-card-desc">Simple calculator built with Python Django</p>
                 <a href="/calculator/" class="project-card-link">View Project →</a>
             </div>
         </div>
 
         <!-- Insurance App Project -->
         <div class="project-card">
-            <div class="project-card-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">🏥 Insurance</div>
+            <div class="project-card-header" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">🏥</div>
             <div class="project-card-content">
                 <h3 class="project-card-title">Insurance App</h3>
-                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Full-featured insurance management with Django REST API</p>
+                <p class="project-card-desc">Full-featured insurance management with Django REST API</p>
                 <a href="/insurance/login/" class="project-card-link">View Project →</a>
             </div>
         </div>
 
         <!-- Console Insurance App Project -->
         <div class="project-card">
-            <div class="project-card-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">💻 Console</div>
+            <div class="project-card-header" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">💻</div>
             <div class="project-card-content">
                 <h3 class="project-card-title">Console Insurance App</h3>
-                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Command-line insurance application in Python</p>
+                <p class="project-card-desc">Command-line insurance application in Python</p>
                 <a href="https://gitlab.com/JAMAN255/console_insurance.git" target="_blank" class="project-card-link">View on GitLab →</a>
             </div>
         </div>
 
         <!-- Todo App Project -->
         <div class="project-card">
-            <div class="project-card-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">✅ Todo</div>
+            <div class="project-card-header" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">✅</div>
             <div class="project-card-content">
                 <h3 class="project-card-title">Todo App</h3>
-                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Task management application with Django</p>
+                <p class="project-card-desc">Task management application with Django</p>
                 <a href="/todos" class="project-card-link">View Project →</a>
             </div>
         </div>
 
         <!-- Ossan Triangle visualization -->
         <div class="project-card">
-            <div class="project-card-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">📊 Ossan</div>
+            <div class="project-card-header" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">📊</div>
             <div class="project-card-content">
                 <h3 class="project-card-title">Ossan Triangle Visualization</h3>
-                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 10px;">Python code for visualizing ternary graphs</p>
+                <p class="project-card-desc">Python code for visualizing ternary graphs</p>
                 <a href="https://gitlab.com/JAMAN255/ossan-triangle-code" target="_blank" class="project-card-link">View on GitLab →</a>
             </div>
         </div>
