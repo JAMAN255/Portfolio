@@ -53,8 +53,8 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 /media
-/staticfiles
-/static_root
+myapp/staticfiles
+myapp/static_root
 
 # Flask stuff:
 instance/
